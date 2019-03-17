@@ -23,5 +23,18 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "description": "Managing streams with react, redux and redux-observable.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SimoNonnis/rx-stream.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SimoNonnis/rx-stream/issues"
+  },
+  "homepage": "https://github.com/SimoNonnis/rx-stream#readme"
 }

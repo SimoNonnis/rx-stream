@@ -1,6 +1,6 @@
 import { createStore, combineReducers } from "redux";
 
-import appReducer from "./reducers/appReducer";
+import { appReducer } from "./reducers";
 
 const configureStore = () => {
   const rootReducer = combineReducers({

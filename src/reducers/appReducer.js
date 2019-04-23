@@ -1,2 +1,14 @@
-const appReducer = (state = { name: "Simon" }, action) => state;
+const appReducer = (state = { name: "Simon" }, action) => {
+  switch (action.type) {
+    case "SET_NAME": {
+      return {
+        ...state,
+        name: action.payload
+      };
+    }
+
+    default:
+      return state;
+  }
+};
 export default appReducer;

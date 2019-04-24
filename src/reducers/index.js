@@ -1,3 +1,4 @@
 import appReducer from "./appReducer";
+import beersReducer from "./beersReducer";
 
-export { appReducer };
+export { appReducer, beersReducer };

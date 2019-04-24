@@ -1,13 +1,11 @@
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import { combineEpics, createEpicMiddleware } from "redux-observable";
-import { of } from "rxjs";
 
 import { appReducer } from "./reducers";
-
-const epic1 = () => of({ type: "SET_NAME", payload: "Anastasia" });
+import { fetchBeersEpic } from "./epics";
 
 const configureStore = () => {
-  const rootEpic = combineEpics(epic1);
+  const rootEpic = combineEpics(fetchBeersEpic);
   const epicMiddleware = createEpicMiddleware();
 
   const rootReducer = combineReducers({

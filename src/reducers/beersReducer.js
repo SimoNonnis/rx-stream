@@ -1,11 +1,23 @@
-import { FETCH_FULFILLED } from "../actions/beersActions";
+import { FETCH_FULFILLED, SET_STATUS } from "../actions/beersActions";
 
-const beersReducer = (state = { data: [], loading: true }, action) => {
+const initialstate = {
+  data: [],
+  status: "idle" // "idle" | "pending" | "success" | "failure";
+};
+
+const beersReducer = (state = initialstate, action) => {
   switch (action.type) {
+    case SET_STATUS: {
+      return {
+        ...state,
+        status: action.payload
+      };
+    }
+
     case FETCH_FULFILLED: {
       return {
         ...state,
-        loading: false,
+        status: "success",
         data: action.payload
       };
     }

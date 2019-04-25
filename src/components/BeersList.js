@@ -1,16 +1,30 @@
 import React from "react";
-import { connect } from "react-redux";
 
-const BeerList = ({ data, loading }) => (
-  <div>
-    {loading ? (
-      <p>Please wait...</p>
-    ) : (
-      <div>
-        <p>Got {data.length} beer(s)</p>
-      </div>
-    )}
-  </div>
+const BeersList = ({ beers }) => (
+  <ul className="List">
+    {beers.map(beer => {
+      return (
+        <li key={beer.id} className="List-item">
+          <figure className="List-item-img">
+            <img src={beer.image_url} alt="" />
+          </figure>
+          <div className="List-item-info">
+            <p>{beer.name}</p>
+            <ul>
+              <li>
+                <small>ABV: {beer.abv}</small>
+              </li>
+              <li>
+                <small>
+                  Volume: {beer.volume.unit} {beer.volume.unit}
+                </small>
+              </li>
+            </ul>
+          </div>
+        </li>
+      );
+    })}
+  </ul>
 );
 
-export default connect(state => state.beers)(BeerList);
+export default BeersList;

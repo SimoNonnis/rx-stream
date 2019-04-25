@@ -1,8 +1,7 @@
 import React from "react";
-import { connect } from "react-redux";
 
-import BeersList from "./components/BeersList";
+import Beers from "./components/Beers";
 
-const App = () => <BeersList />;
+const App = () => <Beers />;
 
-export default connect(state => state.app)(App);
+export default App;

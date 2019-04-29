@@ -1,19 +1,18 @@
 import React from "react";
 import { connect } from "react-redux";
 import BeersList from "./BeersList";
-import { fetchData } from "../actions/beersActions";
+import { search } from "../actions/beersActions";
 
-export const Beers = ({ data, status, fetchData }) => {
+export const Beers = ({ data, status, search }) => {
   return (
     <>
       <div className="App-inputs">
-        <button
-          type="button"
-          onClick={fetchData}
-          disabled={status === "pending"}
-        >
-          Fetch Beers!
-        </button>
+        <input
+          type="text"
+          placeholder="Search beers"
+          onChange={e => search(e.target.value)}
+        />
+
         {status === "pending" && (
           <span className="App-spinner">
             <img src={"/ajax-loader.gif"} alt="" />
@@ -31,5 +30,5 @@ export const Beers = ({ data, status, fetchData }) => {
 
 export default connect(
   state => state.beers,
-  { fetchData }
+  { search }
 )(Beers);

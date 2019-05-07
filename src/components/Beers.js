@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import BeersList from "./BeersList";
 import { search } from "../actions/beersActions";
 
-export const Beers = ({ data, status, search }) => {
+export const Beers = ({ data, status, messages, search }) => {
   return (
     <>
       <div className="App-inputs">
@@ -22,6 +22,12 @@ export const Beers = ({ data, status, search }) => {
       {status === "success" && (
         <div className="App-content">
           <BeersList beers={data} />
+        </div>
+      )}
+
+      {status === "failure" && (
+        <div className="App-content">
+          <p>Oops! {messages[0].text}</p>
         </div>
       )}
     </>

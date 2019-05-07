@@ -1,5 +1,5 @@
 import { ajax } from "rxjs/ajax";
-import { debounceTime, switchMap, map } from "rxjs/operators";
+import { debounceTime, filter, switchMap, map } from "rxjs/operators";
 import { ofType } from "redux-observable";
 import { concat, of } from "rxjs";
 
@@ -12,10 +12,13 @@ const fetchBeersEpic = actions$ => {
   return actions$.pipe(
     ofType(SEARCH),
     debounceTime(500),
+    filter(({ payload }) => payload.trim() !== ""),
     switchMap(({ payload }) => {
       return concat(
         of(setStatus("pending")),
-        ajax.getJSON(search(payload)).pipe(map(resp => fetchFulfilled(resp)))
+        ajax
+          .getJSON(search(payload.trim()))
+          .pipe(map(resp => fetchFulfilled(resp)))
       );
     })
   );

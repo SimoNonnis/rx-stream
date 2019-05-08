@@ -4,7 +4,9 @@ import {
   filter,
   switchMap,
   map,
-  catchError
+  catchError,
+  delay,
+  takeUntil
 } from "rxjs/operators";
 import { ofType } from "redux-observable";
 import { concat, of } from "rxjs";
@@ -13,7 +15,8 @@ import {
   SEARCH,
   setStatus,
   fetchFulfilled,
-  fetchFailed
+  fetchFailed,
+  CANCEL
 } from "../actions/beersActions";
 
 const API = "https://api.punkapi.com/v2/beers";
@@ -28,6 +31,8 @@ const fetchBeersEpic = actions$ => {
       return concat(
         of(setStatus("pending")),
         ajax.getJSON(search(payload.trim())).pipe(
+          delay(5000),
+          takeUntil(actions$.pipe(ofType(CANCEL))),
           map(resp => fetchFulfilled(resp)),
           catchError(resp => {
             return of(fetchFailed(resp.message));

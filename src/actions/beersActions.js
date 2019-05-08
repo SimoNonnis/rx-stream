@@ -3,6 +3,7 @@ export const SEARCH = "SEARCH";
 export const SET_STATUS = "SET_STATUS";
 export const FETCH_FULFILLED = "FETCH_FULLFILLED";
 export const FETCH_FAILED = "FETCH_FAILED";
+export const CANCEL = "CANCEL";
 
 export const fetchData = () => {
   return {
@@ -35,5 +36,11 @@ export const fetchFailed = msg => {
   return {
     type: FETCH_FAILED,
     payload: msg
+  };
+};
+
+export const cancel = () => {
+  return {
+    type: CANCEL
   };
 };

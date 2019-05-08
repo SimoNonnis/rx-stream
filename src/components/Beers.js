@@ -1,9 +1,9 @@
 import React from "react";
 import { connect } from "react-redux";
 import BeersList from "./BeersList";
-import { search } from "../actions/beersActions";
+import { search, cancel } from "../actions/beersActions";
 
-export const Beers = ({ data, status, messages, search }) => {
+export const Beers = ({ data, status, messages, search, cancel }) => {
   return (
     <>
       <div className="App-inputs">
@@ -14,9 +14,14 @@ export const Beers = ({ data, status, messages, search }) => {
         />
 
         {status === "pending" && (
-          <span className="App-spinner">
-            <img src={"/ajax-loader.gif"} alt="" />
-          </span>
+          <>
+            <button type="button" onClick={cancel}>
+              Cancel
+            </button>
+            <span className="App-spinner">
+              <img src={"/ajax-loader.gif"} alt="" />
+            </span>
+          </>
         )}
       </div>
       {status === "success" && (
@@ -36,5 +41,5 @@ export const Beers = ({ data, status, messages, search }) => {
 
 export default connect(
   state => state.beers,
-  { search }
+  { search, cancel }
 )(Beers);

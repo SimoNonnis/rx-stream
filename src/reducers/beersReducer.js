@@ -2,7 +2,8 @@ import {
   FETCH_FULFILLED,
   SET_STATUS,
   FETCH_FAILED,
-  CANCEL
+  CANCEL,
+  RESET
 } from "../actions/beersActions";
 
 const initialstate = {
@@ -41,7 +42,8 @@ const beersReducer = (state = initialstate, action) => {
       };
     }
 
-    case CANCEL: {
+    case CANCEL:
+    case RESET: {
       return {
         ...state,
         status: "idle",

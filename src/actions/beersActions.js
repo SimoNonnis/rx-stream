@@ -4,6 +4,7 @@ export const SET_STATUS = "SET_STATUS";
 export const FETCH_FULFILLED = "FETCH_FULLFILLED";
 export const FETCH_FAILED = "FETCH_FAILED";
 export const CANCEL = "CANCEL";
+export const RESET = "RESET";
 
 export const fetchData = () => {
   return {
@@ -42,5 +43,11 @@ export const fetchFailed = msg => {
 export const cancel = () => {
   return {
     type: CANCEL
+  };
+};
+
+export const reset = () => {
+  return {
+    type: RESET
   };
 };

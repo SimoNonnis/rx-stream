@@ -6,17 +6,18 @@ import {
   map,
   catchError,
   delay,
-  takeUntil
+  mapTo
 } from "rxjs/operators";
 import { ofType } from "redux-observable";
-import { concat, of } from "rxjs";
+import { concat, of, merge, fromEvent, race } from "rxjs";
 
 import {
   SEARCH,
   setStatus,
   fetchFulfilled,
   fetchFailed,
-  CANCEL
+  CANCEL,
+  reset
 } from "../actions/beersActions";
 
 const API = "https://api.punkapi.com/v2/beers";
@@ -28,17 +29,22 @@ const fetchBeersEpic = actions$ => {
     debounceTime(500),
     filter(({ payload }) => payload.trim() !== ""),
     switchMap(({ payload }) => {
-      return concat(
-        of(setStatus("pending")),
-        ajax.getJSON(search(payload.trim())).pipe(
-          delay(5000),
-          takeUntil(actions$.pipe(ofType(CANCEL))),
-          map(resp => fetchFulfilled(resp)),
-          catchError(resp => {
-            return of(fetchFailed(resp.message));
-          })
-        )
+      const ajax$ = ajax.getJSON(search(payload.trim())).pipe(
+        delay(5000),
+        map(resp => fetchFulfilled(resp)),
+        catchError(resp => {
+          return of(fetchFailed(resp.message));
+        })
       );
+
+      const blocker$ = merge(
+        actions$.pipe(ofType(CANCEL)),
+        fromEvent(document, "keyup").pipe(
+          filter(evt => evt.key === "Escape" || evt.key === "Esc")
+        )
+      ).pipe(mapTo(reset()));
+
+      return concat(of(setStatus("pending")), race(ajax$, blocker$));
     })
   );
 };

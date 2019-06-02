@@ -6,7 +6,9 @@ import {
   map,
   catchError,
   delay,
-  mapTo
+  mapTo,
+  withLatestFrom,
+  pluck
 } from "rxjs/operators";
 import { ofType } from "redux-observable";
 import { concat, of, merge, fromEvent, race } from "rxjs";
@@ -20,16 +22,17 @@ import {
   reset
 } from "../actions/beersActions";
 
-const API = "https://api.punkapi.com/v2/beers";
-const search = term => `${API}?beer_name=${encodeURIComponent(term)}`;
+const search = (apiBase, term) =>
+  `${apiBase}?beer_name=${encodeURIComponent(term)}`;
 
-const fetchBeersEpic = actions$ => {
+const fetchBeersEpic = (actions$, state$) => {
   return actions$.pipe(
     ofType(SEARCH),
     debounceTime(500),
     filter(({ payload }) => payload.trim() !== ""),
-    switchMap(({ payload }) => {
-      const ajax$ = ajax.getJSON(search(payload.trim())).pipe(
+    withLatestFrom(state$.pipe(pluck("config", "apiBase"))),
+    switchMap(([{ payload }, apiBase]) => {
+      const ajax$ = ajax.getJSON(search(apiBase, payload.trim())).pipe(
         delay(5000),
         map(resp => fetchFulfilled(resp)),
         catchError(resp => {

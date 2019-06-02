@@ -1,7 +1,7 @@
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import { combineEpics, createEpicMiddleware } from "redux-observable";
 
-import { beersReducer } from "./reducers";
+import { beersReducer, configReducer } from "./reducers";
 import { fetchBeersEpic } from "./epics";
 
 const configureStore = () => {
@@ -9,7 +9,8 @@ const configureStore = () => {
   const epicMiddleware = createEpicMiddleware();
 
   const rootReducer = combineReducers({
-    beers: beersReducer
+    beers: beersReducer,
+    config: configReducer
   });
 
   const composeEnhancers =

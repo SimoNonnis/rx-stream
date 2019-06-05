@@ -1,7 +1,22 @@
-const initialstate = { apiBase: "https://api.punkapi.com/v2/beers" };
+import { SET_CONFIG } from "../actions/configActions";
+
+const initialstate = {
+  apiBase: "https://api.punkapi.com/v2/beers",
+  perPage: 4
+};
 
 const configReducer = (state = initialstate, action) => {
-  return state;
+  switch (action.type) {
+    case SET_CONFIG: {
+      return {
+        ...state,
+        perPage: Number(action.payload)
+      };
+    }
+
+    default:
+      return state;
+  }
 };
 
 export default configReducer;

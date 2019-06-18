@@ -1,12 +1,15 @@
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import { combineEpics, createEpicMiddleware } from "redux-observable";
+import { ajax } from "rxjs/ajax";
 
 import { beersReducer, configReducer } from "./reducers";
 import { fetchBeersEpic, persistEpic, hydrateEpic } from "./epics";
 
-const configureStore = () => {
+const configureStore = (dependencies = {}) => {
   const rootEpic = combineEpics(fetchBeersEpic, persistEpic, hydrateEpic);
-  const epicMiddleware = createEpicMiddleware();
+  const epicMiddleware = createEpicMiddleware({
+    dependencies: { getJSON: ajax.getJSON, document, ...dependencies }
+  });
 
   const rootReducer = combineReducers({
     beers: beersReducer,

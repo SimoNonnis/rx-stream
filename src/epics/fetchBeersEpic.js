@@ -1,4 +1,3 @@
-import { ajax } from "rxjs/ajax";
 import {
   debounceTime,
   filter,
@@ -25,22 +24,22 @@ import {
 const search = (apiBase, term, perPage) =>
   `${apiBase}?beer_name=${encodeURIComponent(term)}&per_page=${perPage}`;
 
-const fetchBeersEpic = (actions$, state$) => {
+const fetchBeersEpic = (actions$, state$, { getJSON, document }) => {
   return actions$.pipe(
     ofType(SEARCH),
     debounceTime(500),
     filter(({ payload }) => payload.trim() !== ""),
     withLatestFrom(state$.pipe(pluck("config"))),
     switchMap(([{ payload }, config]) => {
-      const ajax$ = ajax
-        .getJSON(search(config.apiBase, payload.trim(), config.perPage))
-        .pipe(
-          delay(5000),
-          map(resp => fetchFulfilled(resp)),
-          catchError(resp => {
-            return of(fetchFailed(resp.message));
-          })
-        );
+      const ajax$ = getJSON(
+        search(config.apiBase, payload.trim(), config.perPage)
+      ).pipe(
+        delay(5000),
+        map(resp => fetchFulfilled(resp)),
+        catchError(resp => {
+          return of(fetchFailed(resp.message));
+        })
+      );
 
       const blocker$ = merge(
         actions$.pipe(ofType(CANCEL)),

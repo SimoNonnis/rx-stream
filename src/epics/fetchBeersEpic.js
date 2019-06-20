@@ -4,7 +4,7 @@ import {
   switchMap,
   map,
   catchError,
-  delay,
+  //delay,
   mapTo,
   withLatestFrom,
   pluck
@@ -34,7 +34,7 @@ const fetchBeersEpic = (actions$, state$, { getJSON, document }) => {
       const ajax$ = getJSON(
         search(config.apiBase, payload.trim(), config.perPage)
       ).pipe(
-        delay(5000),
+        //delay(5000),
         map(resp => fetchFulfilled(resp)),
         catchError(resp => {
           return of(fetchFailed(resp.message));

@@ -7,7 +7,9 @@ import {
   search,
   setStatus,
   fetchFulfilled,
-  fetchFailed
+  fetchFailed,
+  cancel,
+  reset
 } from "../actions/beersActions";
 
 describe("Test fetchBeersEpic", () => {
@@ -33,7 +35,7 @@ describe("Test fetchBeersEpic", () => {
       };
       const output$ = fetchBeersEpic(actions$, state$, dependencies);
 
-      expectObservable(output$).toBe("500ms ab", {
+      expectObservable(output$).toBe("500ms a 5000ms b", {
         a: setStatus("pending"),
         b: fetchFulfilled([{ name: "Beer 1" }])
       });
@@ -65,6 +67,34 @@ describe("Test fetchBeersEpic", () => {
       expectObservable(output$).toBe("500ms ab", {
         a: setStatus("pending"),
         b: fetchFailed("Ooops!")
+      });
+    });
+  });
+
+  it("should produce correct actions (reset)", () => {
+    const testScheduler = new TestScheduler((actual, expected) => {
+      expect(actual).toEqual(expected);
+    });
+
+    testScheduler.run(({ hot, cold, expectObservable }) => {
+      const actions$ = hot("a 500ms -b", {
+        a: search("ship"),
+        b: cancel()
+      });
+      const state$ = of({
+        config: initialstate
+      });
+      const dependencies = {
+        getJSON: url => {
+          return cold("---a");
+        },
+        document
+      };
+      const output$ = fetchBeersEpic(actions$, state$, dependencies);
+
+      expectObservable(output$).toBe("500ms a-b", {
+        a: setStatus("pending"),
+        b: reset()
       });
     });
   });
